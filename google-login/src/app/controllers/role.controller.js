@@ -84,7 +84,7 @@ exports.create = (req, res) => {
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Role."
+          err.message || "Some error occurred while retrieving data."
       });
     else res.send(result);
   });
