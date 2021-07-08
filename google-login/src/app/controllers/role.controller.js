@@ -19,7 +19,7 @@ exports.create = (req, res) => {
 
 
 
- //get active campaigns
+ //get  campaigns
  exports.getCampaigns = (req, res) => {
   Role.getCampaigns((err, data) => {
     data.sort((a,b) => a.totalAmount - b.totalAmount).reverse();
@@ -41,7 +41,7 @@ exports.create = (req, res) => {
 
 
 
- //get active campaigns
+//get active campaigns
  exports.getCampaignActive = (req, res) => {
   Role.getCampaignActive((err, data) => {
 
@@ -51,17 +51,20 @@ exports.create = (req, res) => {
   });
    
   let resultFilter  = result.filter(function (e) {
-    const currentDate = new Date();
-    const last30DaysDate = new Date(currentDate.setDate(currentDate.getDate() - 30));
-    return new Date(e.created) >= last30DaysDate
+    var pastDate = new Date();
+    pastDate.setDate(pastDate.getDate() - 30); 
+
+    console.log('30 days back'+pastDate);
+    console.log(e.created)
+    return new Date(e.created) >= pastDate;
 });
 
     if (err)
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving Role."
+          err.message || "Some error occurred while retrieving data."
       });
-    else res.send(resultFilter);
+    else res.send( resultFilter.reverse());
   });
 };
 
@@ -73,7 +76,8 @@ exports.create = (req, res) => {
 
 
     let result  = data.filter(function (e) {
-      let x = ((new Date(e.endDate) < new Date()  || e.procuredAmount >= e.totalAmount) && (e.procuredAmount!=0 || e.totalAmount!=0 || e.endDate !=null))
+     // let x = ((new Date(e.endDate) < new Date()  || e.procuredAmount >= e.totalAmount) && (e.procuredAmount!=0 || e.totalAmount!=0 || e.endDate !=null))
+       let x = ((new Date(e.endDate) < new Date()  || e.procuredAmount >= e.totalAmount) && e.procuredAmount>0 && e.totalAmount>0 && e.endDate !=null )
       return  x
   });
    
